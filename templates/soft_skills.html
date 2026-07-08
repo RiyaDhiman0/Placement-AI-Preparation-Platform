@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Soft Skills - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-comments"></i> Soft Skills Improvement</h1>
+        <p>Practice real-world workplace scenarios to improve your communication and interpersonal skills</p>
+    </div>
+
+    <div class="soft-skills-controls">
+        <div class="category-filter">
+            <label for="category-select">Filter by Category:</label>
+            <select id="category-select">
+                <option value="all">All Categories</option>
+                <option value="Communication">Communication</option>
+                <option value="Teamwork">Teamwork</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Problem Solving">Problem Solving</option>
+                <option value="Adaptability">Adaptability</option>
+            </select>
+        </div>
+        <button onclick="getScenario()" class="btn-primary">
+            <i class="fas fa-shuffle"></i> New Scenario
+        </button>
+    </div>
+
+    <div class="scenario-card" id="scenario-card" style="display: none;">
+        <div class="scenario-header">
+            <span class="category-badge" id="scenario-category">Category</span>
+        </div>
+        <h3 id="scenario-text">Scenario will appear here</h3>
+        
+        <div class="key-points" id="key-points" style="display: none;">
+            <h4><i class="fas fa-bullseye"></i> Key Points to Cover:</h4>
+            <ul id="key-points-list"></ul>
+        </div>
+
+        <div class="answer-section">
+            <textarea id="response-input" rows="6" placeholder="How would you handle this situation? Write your response..."></textarea>
+            <button onclick="evaluateResponse()" class="btn-primary">
+                <i class="fas fa-robot"></i> Get AI Feedback
+            </button>
+        </div>
+
+        <div class="feedback-section" id="feedback-section" style="display: none;">
+            <h3><i class="fas fa-chart-bar"></i> AI Feedback</h3>
+            <div class="score-bar">
+                <div class="score-fill" id="score-fill"></div>
+            </div>
+            <p class="score-text" id="score-text"></p>
+            <p class="word-count" id="word-count"></p>
+            <p id="feedback-text"></p>
+        </div>
+    </div>
+
+    <div class="skills-resources">
+        <h2><i class="fas fa-gem"></i> Key Soft Skills for Placements</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <i class="fas fa-comment-dots"></i>
+                <h3>Communication</h3>
+                <p>Clear verbal and written expression, active listening, and presentation skills</p>
+            </div>
+            <div class="resource-card">
+                <i class="fas fa-users"></i>
+                <h3>Teamwork</h3>
+                <p>Collaboration, conflict resolution, and supporting team members</p>
+            </div>
+            <div class="resource-card">
+                <i class="fas fa-crown"></i>
+                <h3>Leadership</h3>
+                <p>Taking initiative, mentoring others, and driving projects forward</p>
+            </div>
+            <div class="resource-card">
+                <i class="fas fa-puzzle-piece"></i>
+                <h3>Problem Solving</h3>
+                <p>Analytical thinking, creativity, and decision-making under pressure</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentScenario = null;
+
+    async function getScenario() {
+        const category = document.getElementById('category-select').value;
+        try {
+            const response = await fetch(`/api/soft-skills/scenario?category=${category}`);
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            currentScenario = data;
+            displayScenario(data);
+        } catch (error) {
+            alert('Failed to load scenario. Please try again.');
+        }
+    }
+
+    function displayScenario(s) {
+        document.getElementById('scenario-card').style.display = 'block';
+        document.getElementById('scenario-category').textContent = s.category;
+        document.getElementById('scenario-text').textContent = s.scenario;
+        document.getElementById('response-input').value = '';
+        document.getElementById('feedback-section').style.display = 'none';
+        
+        const keyPoints = document.getElementById('key-points');
+        if (s.key_points) {
+            keyPoints.style.display = 'block';
+            const list = document.getElementById('key-points-list');
+            list.innerHTML = s.key_points.map(kp => `<li>${kp}</li>`).join('');
+        } else {
+            keyPoints.style.display = 'none';
+        }
+    }
+
+    async function evaluateResponse() {
+        if (!currentScenario) return;
+        
+        const response = document.getElementById('response-input').value.trim();
+        if (!response) {
+            alert('Please write your response first.');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/soft-skills/evaluate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    response: response,
+                    tips: currentScenario.tips
+                })
+            });
+            const data = await res.json();
+            
+            document.getElementById('feedback-section').style.display = 'block';
+            const fill = document.getElementById('score-fill');
+            fill.style.width = data.score + '%';
+            fill.style.background = data.score >= 80 ? '#00c853' : data.score >= 60 ? '#ffc107' : '#ff1744';
+            document.getElementById('score-text').textContent = `Score: ${data.score}%`;
+            document.getElementById('word-count').textContent = `Word count: ${data.word_count}`;
+            document.getElementById('feedback-text').textContent = data.feedback;
+        } catch (error) {
+            alert('Failed to evaluate. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

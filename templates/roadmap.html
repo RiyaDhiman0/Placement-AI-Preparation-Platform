@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Personalized Roadmap - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-map-signs"></i> Personalized Preparation Roadmap</h1>
+        <p>Get a customized study plan based on your target role, experience, and available time</p>
+    </div>
+
+    <div class="roadmap-form">
+        <div class="form-card">
+            <h3><i class="fas fa-sliders-h"></i> Configure Your Roadmap</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="target-role">Target Role</label>
+                    <select id="target-role">
+                        <option value="Software Engineer">Software Engineer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="DevOps Engineer">DevOps Engineer</option>
+                        <option value="Product Manager">Product Manager</option>
+                        <option value="Machine Learning Engineer">ML Engineer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="experience-level">Experience Level</label>
+                    <select id="experience-level">
+                        <option value="beginner">Beginner (Fresher)</option>
+                        <option value="intermediate">Intermediate (1-2 years)</option>
+                        <option value="advanced">Advanced (3+ years)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="time-available">Time Available</label>
+                    <select id="time-available">
+                        <option value="3 months">3 Months</option>
+                        <option value="2 months">2 Months</option>
+                        <option value="1 month">1 Month (Intensive)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="weak-areas">Weak Areas (Hold Ctrl/Cmd to select multiple)</label>
+                    <select id="weak-areas" multiple>
+                        <option value="Data Structures">Data Structures</option>
+                        <option value="Algorithms">Algorithms</option>
+                        <option value="System Design">System Design</option>
+                        <option value="Aptitude">Aptitude</option>
+                        <option value="Communication">Communication</option>
+                        <option value="Coding Speed">Coding Speed</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="generateRoadmap()" class="btn-primary btn-large">
+                <i class="fas fa-magic"></i> Generate My Roadmap
+            </button>
+        </div>
+    </div>
+
+    <div class="roadmap-results" id="roadmap-results" style="display: none;">
+        <div class="roadmap-header">
+            <div class="roadmap-meta">
+                <h2><i class="fas fa-bullseye"></i> <span id="roadmap-role">Software Engineer</span></h2>
+                <div class="meta-tags">
+                    <span class="meta-tag"><i class="fas fa-clock"></i> <span id="roadmap-duration">3 months</span></span>
+                    <span class="meta-tag"><i class="fas fa-level-up-alt"></i> <span id="roadmap-level">beginner</span></span>
+                    <span class="meta-tag"><i class="fas fa-calendar"></i> <span id="roadmap-weeks">12</span> weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="roadmap-phases" id="roadmap-phases"></div>
+
+        <div class="weak-area-focus" id="weak-area-focus" style="display: none;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Weak Area Focus</h3>
+            <p id="weak-area-text"></p>
+        </div>
+
+        <div class="roadmap-tips">
+            <h3><i class="fas fa-lightbulb"></i> Success Tips</h3>
+            <ul id="roadmap-tips-list"></ul>
+        </div>
+
+        <button onclick="window.print()" class="btn-secondary">
+            <i class="fas fa-print"></i> Print Roadmap
+        </button>
+    </div>
+</div>
+
+<script>
+    async function generateRoadmap() {
+        const role = document.getElementById('target-role').value;
+        const experience = document.getElementById('experience-level').value;
+        const time = document.getElementById('time-available').value;
+        const weakSelect = document.getElementById('weak-areas');
+        const weakAreas = Array.from(weakSelect.selectedOptions).map(opt => opt.value);
+
+        try {
+            const response = await fetch('/api/roadmap/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    role: role,
+                    experience: experience,
+                    time: time,
+                    weak_areas: weakAreas
+                })
+            });
+            const data = await response.json();
+            
+            document.getElementById('roadmap-results').style.display = 'block';
+            document.getElementById('roadmap-role').textContent = data.target_role;
+            document.getElementById('roadmap-duration').textContent = data.duration;
+            document.getElementById('roadmap-level').textContent = data.experience_level;
+            document.getElementById('roadmap-weeks').textContent = data.total_weeks;
+            
+            const phasesDiv = document.getElementById('roadmap-phases');
+            phasesDiv.innerHTML = data.phases.map((phase, index) => `
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-number">Phase ${index + 1}</span>
+                        <h3>${phase.name}</h3>
+                        <span class="phase-duration">${phase.duration}</span>
+                    </div>
+                    <p class="phase-focus"><strong>Focus:</strong> ${phase.focus}</p>
+                    
+                    <div class="phase-tasks">
+                        <h4><i class="fas fa-tasks"></i> Key Tasks:</h4>
+                        <ul>
+                            ${phase.tasks.map(task => `<li>${task}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="phase-schedule">
+                        <h4><i class="fas fa-clock"></i> Daily Schedule:</h4>
+                        <div class="schedule-items">
+                            <div class="schedule-item">
+                                <span class="schedule-time">🌅 Morning</span>
+                                <span>${phase.daily_schedule.morning}</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-time">☀️ Afternoon</span>
+                                <span>${phase.daily_schedule.afternoon}</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-time">🌆 Evening</span>
+                                <span>${phase.daily_schedule.evening}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Weak areas
+            if (data.weak_area_focus) {
+                document.getElementById('weak-area-focus').style.display = 'block';
+                document.getElementById('weak-area-text').textContent = data.weak_area_focus.recommendation;
+            }
+
+            // Tips
+            const tipsList = document.getElementById('roadmap-tips-list');
+            tipsList.innerHTML = data.tips.map(tip => `<li>${tip}</li>`).join('');
+
+            // Scroll to results
+            document.getElementById('roadmap-results').scrollIntoView({behavior: 'smooth'});
+        } catch (error) {
+            alert('Failed to generate roadmap. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Mock Interview - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-user-tie"></i> Mock Interview</h1>
+        <p>Simulate a real interview with technical and HR questions. Get scored on your responses.</p>
+    </div>
+
+    <div class="mock-controls">
+        <div class="interview-info">
+            <p><i class="fas fa-info-circle"></i> You'll get 5 questions (3 technical + 2 HR). Answer each one and get comprehensive feedback.</p>
+        </div>
+        <button onclick="startInterview()" class="btn-primary" id="start-interview-btn">
+            <i class="fas fa-play"></i> Start Interview
+        </button>
+    </div>
+
+    <div class="interview-container" id="interview-container" style="display: none;">
+        <div class="interview-header">
+            <div class="interview-progress">
+                <span class="interview-step" id="current-step">1</span>/<span id="total-steps">5</span>
+                <span class="interview-type" id="question-type">Technical</span>
+            </div>
+            <div class="interview-progress-bar">
+                <div class="interview-progress-fill" id="interview-progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="interview-question-card">
+            <h3 id="interview-question">Loading question...</h3>
+            <div class="interview-answer">
+                <textarea id="interview-answer" rows="6" placeholder="Type your answer as you would in a real interview..."></textarea>
+            </div>
+            <div class="interview-navigation">
+                <button onclick="nextInterviewQuestion()" class="btn-primary" id="next-interview-btn">
+                    Next Question <i class="fas fa-arrow-right"></i>
+                </button>
+                <button onclick="finishInterview()" class="btn-success" id="finish-interview-btn" style="display: none;">
+                    <i class="fas fa-check"></i> Finish Interview
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="interview-results" id="interview-results" style="display: none;">
+        <div class="result-card">
+            <div class="result-icon">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h2>Interview Complete!</h2>
+            <div class="overall-grade" id="overall-grade">A</div>
+            <p class="overall-score" id="overall-score">0%</p>
+            
+            <div class="detailed-feedback" id="detailed-feedback"></div>
+            
+            <div class="interview-tips">
+                <h3><i class="fas fa-lightbulb"></i> Tips for Improvement</h3>
+                <ul>
+                    <li>Practice explaining your thought process clearly</li>
+                    <li>Use the STAR method for behavioral questions</li>
+                    <li>Keep answers concise but comprehensive</li>
+                    <li>Always ask clarifying questions if unsure</li>
+                </ul>
+            </div>
+            
+            <button onclick="startInterview()" class="btn-primary">
+                <i class="fas fa-redo"></i> Take Another Interview
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let interviewQuestions = [];
+    let currentQIndex = 0;
+    let answers = [];
+
+    async function startInterview() {
+        try {
+            const response = await fetch('/api/mock-interview/start');
+            const data = await response.json();
+            interviewQuestions = data.questions;
+            currentQIndex = 0;
+            answers = new Array(data.total).fill('');
+            
+            document.getElementById('start-interview-btn').style.display = 'none';
+            document.getElementById('interview-container').style.display = 'block';
+            document.getElementById('interview-results').style.display = 'none';
+            document.getElementById('total-steps').textContent = data.total;
+            
+            showInterviewQuestion();
+        } catch (error) {
+            alert('Failed to start interview. Please try again.');
+        }
+    }
+
+    function showInterviewQuestion() {
+        if (!interviewQuestions.length) return;
+        
+        const q = interviewQuestions[currentQIndex];
+        document.getElementById('current-step').textContent = currentQIndex + 1;
+        document.getElementById('interview-question').textContent = q.question;
+        document.getElementById('question-type').textContent = q.type.toUpperCase();
+        document.getElementById('question-type').className = `interview-type ${q.type}`;
+        document.getElementById('interview-answer').value = answers[currentQIndex] || '';
+        
+        const progress = ((currentQIndex + 1) / interviewQuestions.length) * 100;
+        document.getElementById('interview-progress-fill').style.width = progress + '%';
+        
+        const isLast = currentQIndex === interviewQuestions.length - 1;
+        document.getElementById('next-interview-btn').style.display = isLast ? 'none' : 'inline-flex';
+        document.getElementById('finish-interview-btn').style.display = isLast ? 'inline-flex' : 'none';
+    }
+
+    function nextInterviewQuestion() {
+        answers[currentQIndex] = document.getElementById('interview-answer').value;
+        if (currentQIndex < interviewQuestions.length - 1) {
+            currentQIndex++;
+            showInterviewQuestion();
+        }
+    }
+
+    async function finishInterview() {
+        answers[currentQIndex] = document.getElementById('interview-answer').value;
+        
+        if (answers.some(a => !a.trim())) {
+            if (!confirm('Some questions are unanswered. Do you want to submit anyway?')) return;
+        }
+        
+        try {
+            const response = await fetch('/api/mock-interview/evaluate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({answers: answers})
+            });
+            const data = await response.json();
+            
+            document.getElementById('interview-container').style.display = 'none';
+            document.getElementById('interview-results').style.display = 'block';
+            
+            document.getElementById('overall-grade').textContent = data.grade;
+            document.getElementById('overall-score').textContent = data.overall_score + '%';
+            
+            const feedbackDiv = document.getElementById('detailed-feedback');
+            feedbackDiv.innerHTML = data.feedback.map(f => `
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-type ${f.type}">${f.type.toUpperCase()}</span>
+                        <span class="feedback-score">Score: ${f.score}%</span>
+                    </div>
+                    <p class="feedback-question">${f.question}</p>
+                    <p class="feedback-word-count">Words: ${f.word_count}</p>
+                    <p class="feedback-comment">${f.feedback}</p>
+                </div>
+            `).join('');
+            
+            document.getElementById('start-interview-btn').style.display = 'inline-flex';
+        } catch (error) {
+            alert('Failed to evaluate interview. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

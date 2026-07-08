@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Aptitude Tests - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-brain"></i> Aptitude Tests</h1>
+        <p>Practice quantitative aptitude, logical reasoning, and verbal ability questions</p>
+    </div>
+
+    <div class="aptitude-controls">
+        <div class="test-info">
+            <p><i class="fas fa-info-circle"></i> Each test has 10 random questions. You have unlimited time.</p>
+        </div>
+        <button onclick="startTest()" class="btn-primary" id="start-btn">
+            <i class="fas fa-play"></i> Start Test
+        </button>
+    </div>
+
+    <div class="test-container" id="test-container" style="display: none;">
+        <div class="test-header">
+            <div class="progress-info">
+                <span id="current-q">1</span>/<span id="total-q">10</span>
+            </div>
+            <div class="test-progress-bar">
+                <div class="test-progress-fill" id="test-progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="question-container">
+            <h3 id="question-text">Loading question...</h3>
+            <div class="options-container" id="options-container"></div>
+        </div>
+
+        <div class="test-navigation">
+            <button onclick="prevQuestion()" class="btn-secondary" id="prev-btn" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button onclick="nextQuestion()" class="btn-primary" id="next-btn">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button onclick="submitTest()" class="btn-success" id="submit-btn" style="display: none;">
+                <i class="fas fa-check"></i> Submit Test
+            </button>
+        </div>
+    </div>
+
+    <div class="results-container" id="results-container" style="display: none;">
+        <div class="result-card">
+            <div class="result-icon">
+                <i class="fas fa-trophy" id="result-icon"></i>
+            </div>
+            <h2>Test Complete!</h2>
+            <div class="result-score">
+                <span id="result-score">0</span>/<span id="result-total">10</span>
+            </div>
+            <p class="result-percentage" id="result-percentage">0%</p>
+            <p class="result-message" id="result-message"></p>
+            <div class="result-details" id="result-details"></div>
+            <button onclick="startTest()" class="btn-primary">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let testActive = false;
+
+    async function startTest() {
+        try {
+            const response = await fetch('/api/aptitude/start');
+            const data = await response.json();
+            questions = data.questions;
+            currentIndex = 0;
+            userAnswers = {};
+            testActive = true;
+            
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('test-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('total-q').textContent = questions.length;
+            
+            showQuestion();
+        } catch (error) {
+            alert('Failed to start test. Please try again.');
+        }
+    }
+
+    function showQuestion() {
+        if (!questions.length) return;
+        
+        const q = questions[currentIndex];
+        document.getElementById('current-q').textContent = currentIndex + 1;
+        document.getElementById('question-text').textContent = q.question;
+        
+        const progress = ((currentIndex + 1) / questions.length) * 100;
+        document.getElementById('test-progress-fill').style.width = progress + '%';
+        
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = q.options.map((opt, i) => `
+            <div class="option-item ${userAnswers[q.id] === opt ? 'selected' : ''}" 
+                 onclick="selectOption('${q.id}', '${opt}')">
+                <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="option-text">${opt}</span>
+                ${userAnswers[q.id] === opt ? '<i class="fas fa-check-circle"></i>' : ''}
+            </div>
+        `).join('');
+        
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        const isLast = currentIndex === questions.length - 1;
+        document.getElementById('next-btn').style.display = isLast ? 'none' : 'inline-flex';
+        document.getElementById('submit-btn').style.display = isLast ? 'inline-flex' : 'none';
+    }
+
+    function selectOption(qId, option) {
+        userAnswers[qId] = option;
+        showQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            showQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showQuestion();
+        }
+    }
+
+    async function submitTest() {
+        if (!confirm('Are you sure you want to submit the test?')) return;
+        
+        try {
+            const response = await fetch('/api/aptitude/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({answers: userAnswers})
+            });
+            const data = await response.json();
+            
+            document.getElementById('test-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+            
+            document.getElementById('result-score').textContent = data.score;
+            document.getElementById('result-total').textContent = data.total;
+            document.getElementById('result-percentage').textContent = data.percentage + '%';
+            
+            const icon = document.getElementById('result-icon');
+            const message = document.getElementById('result-message');
+            
+            if (data.passed) {
+                icon.className = 'fas fa-trophy';
+                icon.style.color = '#ffc107';
+                message.textContent = 'Congratulations! You passed the test.';
+            } else {
+                icon.className = 'fas fa-book';
+                icon.style.color = '#ff6b6b';
+                message.textContent = 'Keep practicing! Review the questions you missed.';
+            }
+            
+            const details = document.getElementById('result-details');
+            details.innerHTML = data.results.map(r => `
+                <div class="result-item ${r.is_correct ? 'correct' : 'wrong'}">
+                    <p><strong>Q${r.id}:</strong> ${r.is_correct ? '✓ Correct' : '✗ Incorrect'}</p>
+                    <p>Your answer: ${r.user_answer || 'Not answered'}</p>
+                    ${!r.is_correct ? `<p>Correct answer: ${r.correct_answer}</p>` : ''}
+                </div>
+            `).join('');
+            
+            document.getElementById('start-btn').style.display = 'inline-flex';
+        } catch (error) {
+            alert('Failed to submit test. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

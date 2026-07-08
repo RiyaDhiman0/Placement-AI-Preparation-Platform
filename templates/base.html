@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Placement Prep Portal{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('dashboard') }}" class="nav-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>PlacementPro</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('technical') }}" class="nav-link">
+                    <i class="fas fa-code"></i> Technical
+                </a>
+                <a href="{{ url_for('soft_skills') }}" class="nav-link">
+                    <i class="fas fa-comments"></i> Soft Skills
+                </a>
+                <a href="{{ url_for('aptitude') }}" class="nav-link">
+                    <i class="fas fa-brain"></i> Aptitude
+                </a>
+                <a href="{{ url_for('mock_interview') }}" class="nav-link">
+                    <i class="fas fa-user-tie"></i> Mock Interview
+                </a>
+                <a href="{{ url_for('previous_questions') }}" class="nav-link">
+                    <i class="fas fa-history"></i> Previous Qs
+                </a>
+                <a href="{{ url_for('ai_feedback') }}" class="nav-link">
+                    <i class="fas fa-robot"></i> AI Feedback
+                </a>
+                <a href="{{ url_for('roadmap') }}" class="nav-link">
+                    <i class="fas fa-map-signs"></i> Roadmap
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-link logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

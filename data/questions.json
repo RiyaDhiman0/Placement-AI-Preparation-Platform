@@ -1,0 +1,353 @@
+{
+  "technical": [
+    {
+      "id": "t1",
+      "topic": "Data Structures",
+      "question": "Explain the difference between an array and a linked list. When would you use one over the other?",
+      "answer": "An array stores elements in contiguous memory locations with fixed size, while a linked list stores elements in non-contiguous memory with dynamic size connected via pointers. Arrays provide O(1) random access but O(n) insertion/deletion. Linked lists provide O(1) insertion/deletion at ends but O(n) search.",
+      "keywords": ["contiguous", "dynamic", "random access", "pointers", "O(1)", "memory"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "t2",
+      "topic": "Data Structures",
+      "question": "What is a hash table and how does it handle collisions?",
+      "answer": "A hash table is a data structure that maps keys to values using a hash function. It handles collisions through chaining (using linked lists at each bucket) or open addressing (probing for next empty slot).",
+      "keywords": ["hash function", "key-value", "collision", "chaining", "open addressing", "bucket"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "t3",
+      "topic": "Algorithms",
+      "question": "Explain the time complexity of quicksort and when it performs worst-case.",
+      "answer": "Quicksort has average time complexity O(n log n) and worst-case O(n²). Worst case occurs when the pivot is always the smallest or largest element, typically happening with already sorted arrays and poor pivot selection.",
+      "keywords": ["O(n log n)", "O(n²)", "pivot", "partition", "worst case", "recursive"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t4",
+      "topic": "Algorithms",
+      "question": "What is dynamic programming and give an example problem?",
+      "answer": "Dynamic programming solves complex problems by breaking them into simpler subproblems and storing their results to avoid redundant computations. Classic examples include the Fibonacci sequence, knapsack problem, and longest common subsequence.",
+      "keywords": ["subproblems", "memoization", "tabulation", "optimal substructure", "overlapping"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t5",
+      "topic": "OOP",
+      "question": "Explain the four pillars of Object-Oriented Programming.",
+      "answer": "The four pillars are: 1) Encapsulation - bundling data and methods, hiding internal state. 2) Inheritance - creating new classes from existing ones. 3) Polymorphism - objects taking multiple forms. 4) Abstraction - hiding complex implementation details.",
+      "keywords": ["encapsulation", "inheritance", "polymorphism", "abstraction", "class", "object"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "t6",
+      "topic": "OOP",
+      "question": "What is the difference between abstraction and encapsulation?",
+      "answer": "Abstraction hides complexity by showing only essential features, while encapsulation hides data by bundling it with methods and restricting direct access. Abstraction focuses on what an object does, encapsulation on how it does it.",
+      "keywords": ["hides complexity", "data hiding", "essential features", "restrict access", "bundling"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t7",
+      "topic": "Databases",
+      "question": "What is normalization in databases and what are its normal forms?",
+      "answer": "Normalization organizes database tables to reduce redundancy and dependency. Normal forms: 1NF (atomic values), 2NF (no partial dependency), 3NF (no transitive dependency), BCNF (every determinant is a candidate key).",
+      "keywords": ["redundancy", "1NF", "2NF", "3NF", "BCNF", "dependency"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t8",
+      "topic": "Databases",
+      "question": "Explain SQL JOIN types with examples.",
+      "answer": "INNER JOIN returns matching rows from both tables. LEFT JOIN returns all rows from left table. RIGHT JOIN returns all rows from right table. FULL OUTER JOIN returns all rows when there's a match in either table. CROSS JOIN returns Cartesian product.",
+      "keywords": ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN", "CROSS JOIN", "ON clause"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t9",
+      "topic": "Operating Systems",
+      "question": "What is deadlock and what are the necessary conditions?",
+      "answer": "Deadlock is a state where processes are blocked waiting for resources held by each other. Necessary conditions: Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. All four must occur simultaneously for deadlock.",
+      "keywords": ["mutual exclusion", "hold and wait", "no preemption", "circular wait", "blocked", "starvation"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t10",
+      "topic": "Operating Systems",
+      "question": "Explain virtual memory and paging.",
+      "answer": "Virtual memory allows execution of processes not completely in memory by using disk space as extension. Paging divides memory into fixed-size blocks (pages/frames) and uses page tables for address translation, enabling efficient memory management.",
+      "keywords": ["virtual memory", "paging", "page table", "address translation", "frame", "swap"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "t11",
+      "topic": "Networks",
+      "question": "Explain the OSI model layers.",
+      "answer": "OSI model has 7 layers: Physical (bits), Data Link (frames), Network (packets), Transport (segments), Session (sessions), Presentation (encryption/compression), Application (user services). Each layer serves the layer above it.",
+      "keywords": ["physical", "data link", "network", "transport", "session", "presentation", "application"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "t12",
+      "topic": "Networks",
+      "question": "What is TCP/IP and how does it differ from UDP?",
+      "answer": "TCP is connection-oriented, ensures reliable delivery with error checking and flow control. UDP is connectionless, faster but unreliable. TCP is used for web browsing, email. UDP is used for streaming, gaming where speed matters more.",
+      "keywords": ["connection-oriented", "connectionless", "reliable", "error checking", "flow control", "streaming"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "t13",
+      "topic": "System Design",
+      "question": "Design a URL shortening service like TinyURL.",
+      "answer": "Key components: Hash function to generate short codes, database to store mappings, redirect handler. Use base62 encoding for short URLs. Consider caching popular URLs, handling collisions, and analytics tracking for clicks.",
+      "keywords": ["hash function", "base62", "database", "redirect", "cache", "collision"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "t14",
+      "topic": "System Design",
+      "question": "Explain load balancing and its algorithms.",
+      "answer": "Load balancing distributes traffic across servers. Algorithms: Round Robin (sequential), Least Connections (to server with fewest), IP Hash (client-based routing), Weighted (capacity-based). Improves reliability and performance.",
+      "keywords": ["round robin", "least connections", "ip hash", "weighted", "distribution", "scalability"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "t15",
+      "topic": "Data Structures",
+      "question": "What is a binary search tree and its time complexity for operations?",
+      "answer": "A BST is a tree where left child < parent < right child. Average case: O(log n) for search, insert, delete. Worst case O(n) when tree becomes skewed. Balanced trees like AVL maintain O(log n) operations.",
+      "keywords": ["binary search tree", "log n", "balanced", "left child", "right child", "skewed"],
+      "difficulty": "easy"
+    }
+  ],
+  "aptitude": [
+    {
+      "id": "a1",
+      "question": "If a train runs at 60 km/h, it reaches its destination 10 minutes late. If it runs at 80 km/h, it reaches 10 minutes early. What is the distance?",
+      "options": ["60 km", "80 km", "100 km", "120 km"],
+      "answer": "80 km",
+      "category": "Speed & Distance"
+    },
+    {
+      "id": "a2",
+      "question": "What is the next number in the series: 2, 6, 12, 20, 30, ?",
+      "options": ["36", "40", "42", "48"],
+      "answer": "42",
+      "category": "Series"
+    },
+    {
+      "id": "a3",
+      "question": "A man's age is three times his son's age. After 10 years, he will be twice his son's age. Find the son's current age.",
+      "options": ["5 years", "10 years", "15 years", "20 years"],
+      "answer": "10 years",
+      "category": "Ages"
+    },
+    {
+      "id": "a4",
+      "question": "What is the probability of getting a sum of 7 when rolling two dice?",
+      "options": ["1/6", "1/12", "1/36", "1/9"],
+      "answer": "1/6",
+      "category": "Probability"
+    },
+    {
+      "id": "a5",
+      "question": "If 15 workers can build a wall in 20 days, how many workers are needed to build it in 10 days?",
+      "options": ["25", "30", "35", "40"],
+      "answer": "30",
+      "category": "Work & Time"
+    },
+    {
+      "id": "a6",
+      "question": "Find the compound interest on ₹10,000 at 10% per annum for 2 years.",
+      "options": ["₹2,000", "₹2,100", "₹2,200", "₹2,400"],
+      "answer": "₹2,100",
+      "category": "Interest"
+    },
+    {
+      "id": "a7",
+      "question": "A boat takes 4 hours to travel 12 km upstream and 2 hours to return downstream. Find the speed of the stream.",
+      "options": ["1 km/h", "1.5 km/h", "2 km/h", "2.5 km/h"],
+      "answer": "1.5 km/h",
+      "category": "Boat & Stream"
+    },
+    {
+      "id": "a8",
+      "question": "In how many ways can 5 people be seated in a row?",
+      "options": ["60", "100", "120", "240"],
+      "answer": "120",
+      "category": "Permutations"
+    },
+    {
+      "id": "a9",
+      "question": "A shopkeeper sells an item at a 20% profit on cost price. If the selling price is ₹600, what is the cost price?",
+      "options": ["₹480", "₹500", "₹520", "₹550"],
+      "answer": "₹500",
+      "category": "Profit & Loss"
+    },
+    {
+      "id": "a10",
+      "question": "What is the value of log₂ 32?",
+      "options": ["4", "5", "6", "8"],
+      "answer": "5",
+      "category": "Logarithms"
+    },
+    {
+      "id": "a11",
+      "question": "If the ratio of boys to girls in a class is 3:2 and there are 30 boys, how many students are there?",
+      "options": ["45", "50", "55", "60"],
+      "answer": "50",
+      "category": "Ratio"
+    },
+    {
+      "id": "a12",
+      "question": "A train 150m long passes a pole in 15 seconds. Find its speed in km/h.",
+      "options": ["30 km/h", "36 km/h", "40 km/h", "45 km/h"],
+      "answer": "36 km/h",
+      "category": "Speed & Distance"
+    },
+    {
+      "id": "a13",
+      "question": "What is the average of first 20 natural numbers?",
+      "options": ["10", "10.5", "11", "11.5"],
+      "answer": "10.5",
+      "category": "Averages"
+    },
+    {
+      "id": "a14",
+      "question": "If A can do a work in 10 days and B in 15 days, how many days will they take working together?",
+      "options": ["5 days", "6 days", "7 days", "8 days"],
+      "answer": "6 days",
+      "category": "Work & Time"
+    },
+    {
+      "id": "a15",
+      "question": "A number when divided by 7 leaves remainder 3. What is the remainder when the square of that number is divided by 7?",
+      "options": ["1", "2", "3", "4"],
+      "answer": "2",
+      "category": "Number System"
+    }
+  ],
+  "previous_year": [
+    {
+      "id": "py1",
+      "company": "Google",
+      "year": 2024,
+      "question": "Given an array of integers, find the longest subarray with sum equal to k.",
+      "topic": "Data Structures",
+      "difficulty": "Medium",
+      "answer_hint": "Use hashmap to store prefix sums",
+      "category": "coding"
+    },
+    {
+      "id": "py2",
+      "company": "Google",
+      "year": 2024,
+      "question": "Design a search autocomplete system.",
+      "topic": "System Design",
+      "difficulty": "Hard",
+      "answer_hint": "Use Trie data structure with frequency counts",
+      "category": "design"
+    },
+    {
+      "id": "py3",
+      "company": "Microsoft",
+      "year": 2024,
+      "question": "Merge two sorted linked lists.",
+      "topic": "Data Structures",
+      "difficulty": "Easy",
+      "answer_hint": "Use two-pointer technique",
+      "category": "coding"
+    },
+    {
+      "id": "py4",
+      "company": "Microsoft",
+      "year": 2024,
+      "question": "Design a rate limiter for an API.",
+      "topic": "System Design",
+      "difficulty": "Medium",
+      "answer_hint": "Use sliding window or token bucket algorithm",
+      "category": "design"
+    },
+    {
+      "id": "py5",
+      "company": "Amazon",
+      "year": 2024,
+      "question": "Find the maximum profit from buying and selling stock (one transaction).",
+      "topic": "Algorithms",
+      "difficulty": "Easy",
+      "answer_hint": "Track minimum price and max profit",
+      "category": "coding"
+    },
+    {
+      "id": "py6",
+      "company": "Amazon",
+      "year": 2024,
+      "question": "Design Amazon's product recommendation system.",
+      "topic": "System Design",
+      "difficulty": "Hard",
+      "answer_hint": "Use collaborative filtering and content-based filtering",
+      "category": "design"
+    },
+    {
+      "id": "py7",
+      "company": "Meta",
+      "year": 2024,
+      "question": "Clone a graph (deep copy with random pointers).",
+      "topic": "Data Structures",
+      "difficulty": "Medium",
+      "answer_hint": "Use BFS/DFS with hashmap for visited nodes",
+      "category": "coding"
+    },
+    {
+      "id": "py8",
+      "company": "Meta",
+      "year": 2024,
+      "question": "Design Facebook's news feed.",
+      "topic": "System Design",
+      "difficulty": "Hard",
+      "answer_hint": "Use feed ranking, fan-out approach, caching",
+      "category": "design"
+    },
+    {
+      "id": "py9",
+      "company": "Google",
+      "year": 2023,
+      "question": "Implement a function to serialize and deserialize a binary tree.",
+      "topic": "Data Structures",
+      "difficulty": "Medium",
+      "answer_hint": "Use preorder traversal with null markers",
+      "category": "coding"
+    },
+    {
+      "id": "py10",
+      "company": "Microsoft",
+      "year": 2023,
+      "question": "Design a URL shortener service.",
+      "topic": "System Design",
+      "difficulty": "Medium",
+      "answer_hint": "Use base62 encoding and database storage",
+      "category": "design"
+    },
+    {
+      "id": "py11",
+      "company": "Amazon",
+      "year": 2023,
+      "question": "Find all anagrams in a string.",
+      "topic": "Algorithms",
+      "difficulty": "Medium",
+      "answer_hint": "Use sliding window with character frequency map",
+      "category": "coding"
+    },
+    {
+      "id": "py12",
+      "company": "Meta",
+      "year": 2023,
+      "question": "Design WhatsApp's messaging system.",
+      "topic": "System Design",
+      "difficulty": "Hard",
+      "answer_hint": "Use WebSockets, message queues, and database sharding",
+      "category": "design"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlacementPro - Your Placement Preparation Partner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="landing-page">
+        <div class="landing-bg"></div>
+        <div class="landing-content">
+            <div class="landing-hero">
+                <div class="hero-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1 class="hero-title">PlacementPro</h1>
+                <p class="hero-subtitle">Your AI-Powered Placement Preparation Partner</p>
+                <p class="hero-description">
+                    Master technical interviews, improve soft skills, crack aptitude tests, 
+                    and get personalized AI feedback — all in one platform.
+                </p>
+                
+                <div class="features-grid">
+                    <div class="feature-card animate">
+                        <i class="fas fa-code"></i>
+                        <h3>Technical Prep</h3>
+                        <p>DSA, algorithms, system design & more</p>
+                    </div>
+                    <div class="feature-card animate">
+                        <i class="fas fa-comments"></i>
+                        <h3>Soft Skills</h3>
+                        <p>Communication, leadership & teamwork</p>
+                    </div>
+                    <div class="feature-card animate">
+                        <i class="fas fa-brain"></i>
+                        <h3>Aptitude Tests</h3>
+                        <p>Quantitative, logical & verbal ability</p>
+                    </div>
+                    <div class="feature-card animate">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>Mock Interviews</h3>
+                        <p>Real interview simulations</p>
+                    </div>
+                    <div class="feature-card animate">
+                        <i class="fas fa-history"></i>
+                        <h3>Previous Questions</h3>
+                        <p>Company-wise past papers</p>
+                    </div>
+                    <div class="feature-card animate">
+                        <i class="fas fa-robot"></i>
+                        <h3>AI Feedback</h3>
+                        <p>Smart scoring & suggestions</p>
+                    </div>
+                </div>
+
+                <div class="login-section">
+                    <h2>Start Your Preparation Journey</h2>
+                    <div class="login-form">
+                        <input type="text" id="username-input" placeholder="Enter your name to begin..." 
+                               class="login-input" onkeypress="handleKeyPress(event)">
+                        <button onclick="login()" class="login-btn">
+                            <i class="fas fa-arrow-right"></i> Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') login();
+        }
+
+        async function login() {
+            const username = document.getElementById('username-input').value.trim();
+            if (!username) {
+                alert('Please enter your name to continue.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: username})
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+            }
+        }
+
+        // Animate feature cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

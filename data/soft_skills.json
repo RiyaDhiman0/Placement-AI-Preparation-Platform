@@ -1,0 +1,98 @@
+[
+  {
+    "id": "s1",
+    "category": "Communication",
+    "scenario": "You are in a team meeting and disagree with your senior developer's approach to solving a critical bug. How would you express your disagreement respectfully?",
+    "ideal_response": "I would first acknowledge their expertise and the effort they've put in. Then I would present my alternative approach with data or examples, using 'I think' or 'Have we considered' instead of direct contradiction. I would ask for their feedback on my suggestion and be open to compromise.",
+    "tips": ["acknowledge", "respectful", "alternative", "data", "feedback", "compromise", "collaboration"],
+    "key_points": ["Active listening", "Respectful disagreement", "Data-driven arguments", "Open to feedback"]
+  },
+  {
+    "id": "s2",
+    "category": "Communication",
+    "scenario": "You need to explain a complex technical concept to a non-technical stakeholder. How would you approach this?",
+    "ideal_response": "I would use analogies and simple language, avoiding technical jargon. I'd break down the concept into smaller parts, use visual aids if possible, and check for understanding frequently. I'd relate the technical aspects to business outcomes they care about.",
+    "tips": ["analogies", "simple language", "visual aids", "check understanding", "business value", "patience"],
+    "key_points": ["Avoid jargon", "Use analogies", "Focus on business value", "Check understanding"]
+  },
+  {
+    "id": "s3",
+    "category": "Teamwork",
+    "scenario": "A team member is consistently missing deadlines, affecting the project timeline. How would you handle this situation?",
+    "ideal_response": "I would have a private conversation to understand if there are blockers or personal issues. I'd offer help or suggest breaking tasks into smaller chunks. If it continues, I'd escalate to the team lead professionally, focusing on project impact rather than blaming.",
+    "tips": ["private conversation", "understand blockers", "offer help", "break tasks", "escalate professionally", "supportive"],
+    "key_points": ["Empathy first", "Offer support", "Professional escalation", "Focus on solutions"]
+  },
+  {
+    "id": "s4",
+    "category": "Teamwork",
+    "scenario": "Your team is divided on which technology stack to use for a new project. How would you help reach a consensus?",
+    "ideal_response": "I would facilitate a structured discussion where each option's pros and cons are listed. We'd evaluate based on project requirements, team expertise, scalability, and maintenance. I'd suggest a proof of concept for top contenders and use voting or decision matrix for final choice.",
+    "tips": ["facilitate discussion", "pros and cons", "evaluate criteria", "proof of concept", "decision matrix", "consensus"],
+    "key_points": ["Structured evaluation", "Data-driven decision", "Team input", "Compromise"]
+  },
+  {
+    "id": "s5",
+    "category": "Leadership",
+    "scenario": "You've been asked to lead a project with junior developers. How would you ensure their growth while meeting project deadlines?",
+    "ideal_response": "I would assign tasks that match their skill levels while providing growth opportunities. I'd schedule regular check-ins and code reviews, pair them with experienced members, and create a safe environment for questions. I'd also set clear milestones and provide constructive feedback.",
+    "tips": ["assign appropriate tasks", "regular check-ins", "code reviews", "pair programming", "safe environment", "constructive feedback"],
+    "key_points": ["Balance growth and delivery", "Mentorship", "Clear expectations", "Regular feedback"]
+  },
+  {
+    "id": "s6",
+    "category": "Leadership",
+    "scenario": "A project is falling behind schedule due to unforeseen technical challenges. How would you motivate the team and get back on track?",
+    "ideal_response": "I would acknowledge the challenges and the team's hard work. We'd reassess priorities, possibly reduce scope or get additional resources. I'd break remaining work into smaller milestones to create quick wins and boost morale. I'd also communicate transparently with stakeholders about revised timelines.",
+    "tips": ["acknowledge effort", "reassess priorities", "quick wins", "transparent communication", "morale boost", "resource planning"],
+    "key_points": ["Transparency", "Re-prioritization", "Team morale", "Stakeholder communication"]
+  },
+  {
+    "id": "s7",
+    "category": "Problem Solving",
+    "scenario": "You discover a critical bug in production that affects users. Describe your approach to handling this situation.",
+    "ideal_response": "First, I'd assess the severity and impact. If critical, I'd consider rolling back or hotfixing. I'd communicate the issue to stakeholders and affected users. Then I'd root-cause analyze, fix it properly, add tests to prevent recurrence, and document the incident for future reference.",
+    "tips": ["assess impact", "quick mitigation", "stakeholder communication", "root cause analysis", "proper fix", "prevent recurrence"],
+    "key_points": ["Quick response", "Root cause analysis", "Communication", "Preventive measures"]
+  },
+  {
+    "id": "s8",
+    "category": "Problem Solving",
+    "scenario": "You're given a task with ambiguous requirements. How would you proceed?",
+    "ideal_response": "I would start by listing what I understand and what's unclear. I'd schedule a meeting with stakeholders to clarify requirements, ask specific questions, and document the decisions. I'd create a prototype or wireframe for validation before full implementation.",
+    "tips": ["list assumptions", "clarify requirements", "document decisions", "prototype", "validation", "iterative approach"],
+    "key_points": ["Seek clarification", "Document assumptions", "Iterative delivery", "Stakeholder alignment"]
+  },
+  {
+    "id": "s9",
+    "category": "Adaptability",
+    "scenario": "Your company is adopting a new technology stack that you've never used before. The first project starts in two weeks. How do you prepare?",
+    "ideal_response": "I would create a structured learning plan: start with official documentation and tutorials, build a small practice project, join community forums, and find a mentor. I'd also identify which parts of my existing knowledge transfer to the new stack and focus on fundamentals first.",
+    "tips": ["learning plan", "practice project", "community", "mentor", "transferable skills", "fundamentals"],
+    "key_points": ["Structured learning", "Hands-on practice", "Leverage existing skills", "Seek help"]
+  },
+  {
+    "id": "s10",
+    "category": "Adaptability",
+    "scenario": "Your project priorities change suddenly due to market demands. How do you handle the transition?",
+    "ideal_response": "I would understand the new priorities and their rationale. I'd assess what work can be repurposed and what needs to be started fresh. I'd update my task list, communicate with stakeholders about the change, and maintain a positive attitude focusing on the new opportunity.",
+    "tips": ["understand rationale", "repurpose work", "update plans", "communicate change", "positive attitude", "flexibility"],
+    "key_points": ["Embrace change", "Re-prioritize", "Positive mindset", "Clear communication"]
+  },
+  {
+    "id": "s11",
+    "category": "Communication",
+    "scenario": "You have to deliver constructive feedback to a colleague about their code quality. How would you approach this conversation?",
+    "ideal_response": "I would start with positive aspects of their work, then discuss specific areas for improvement with examples. I'd use 'I' statements and focus on the code, not the person. I'd offer to pair program or review together, and end with encouragement.",
+    "tips": ["positive first", "specific examples", "focus on code", "offer help", "encouragement", "constructive"],
+    "key_points": ["Be specific", "Focus on behavior, not person", "Offer solutions", "End positively"]
+  },
+  {
+    "id": "s12",
+    "category": "Teamwork",
+    "scenario": "During a sprint retrospective, there's tension between two team members. How would you help resolve this?",
+    "ideal_response": "I would acknowledge the tension and suggest focusing on process improvements rather than blame. I'd encourage each person to share their perspective without interruption, find common ground, and propose actionable solutions. If needed, I'd suggest a separate mediation session.",
+    "tips": ["acknowledge tension", "focus on process", "active listening", "common ground", "actionable solutions", "mediation"],
+    "key_points": ["Neutral facilitation", "Focus on solutions", "Active listening", "Follow-up"]
+  }
+]

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Technical Interview Prep - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-code"></i> Technical Interview Preparation</h1>
+        <p>Practice common technical interview questions with AI-powered feedback</p>
+    </div>
+
+    <div class="tech-controls">
+        <div class="topic-filter">
+            <label for="topic-select">Filter by Topic:</label>
+            <select id="topic-select">
+                <option value="all">All Topics</option>
+                <option value="Data Structures">Data Structures</option>
+                <option value="Algorithms">Algorithms</option>
+                <option value="OOP">OOP</option>
+                <option value="Databases">Databases</option>
+                <option value="Operating Systems">Operating Systems</option>
+                <option value="Networks">Networks</option>
+                <option value="System Design">System Design</option>
+            </select>
+        </div>
+        <button onclick="getRandomQuestion()" class="btn-primary">
+            <i class="fas fa-shuffle"></i> Random Question
+        </button>
+    </div>
+
+    <div class="question-card" id="question-card" style="display: none;">
+        <div class="question-header">
+            <span class="topic-badge" id="question-topic">Topic</span>
+            <span class="difficulty-badge" id="question-difficulty">Easy</span>
+        </div>
+        <h3 id="question-text">Question will appear here</h3>
+        
+        <div class="answer-section">
+            <textarea id="answer-input" rows="6" placeholder="Type your answer here..."></textarea>
+            <button onclick="checkAnswer()" class="btn-primary">
+                <i class="fas fa-check"></i> Check Answer
+            </button>
+        </div>
+
+        <div class="feedback-section" id="feedback-section" style="display: none;">
+            <h3><i class="fas fa-chart-bar"></i> Feedback</h3>
+            <div class="score-bar">
+                <div class="score-fill" id="score-fill"></div>
+            </div>
+            <p id="score-text"></p>
+            <p id="feedback-text"></p>
+            <div class="correct-answer" id="correct-answer" style="display: none;">
+                <h4><i class="fas fa-book"></i> Model Answer:</h4>
+                <p id="model-answer"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="practice-tips">
+        <h2><i class="fas fa-lightbulb"></i> Preparation Tips</h2>
+        <div class="tips-grid">
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <p>Understand the problem before jumping to code</p>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <p>Explain your thought process clearly</p>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <p>Consider edge cases and test your solution</p>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <p>Discuss time and space complexity</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentQuestion = null;
+
+    async function getRandomQuestion() {
+        const topic = document.getElementById('topic-select').value;
+        try {
+            const response = await fetch(`/api/technical/random?topic=${topic}`);
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            currentQuestion = data;
+            displayQuestion(data);
+        } catch (error) {
+            alert('Failed to load question. Please try again.');
+        }
+    }
+
+    function displayQuestion(q) {
+        document.getElementById('question-card').style.display = 'block';
+        document.getElementById('question-topic').textContent = q.topic;
+        document.getElementById('question-difficulty').textContent = q.difficulty.toUpperCase();
+        document.getElementById('question-difficulty').className = `difficulty-badge ${q.difficulty}`;
+        document.getElementById('question-text').textContent = q.question;
+        document.getElementById('answer-input').value = '';
+        document.getElementById('feedback-section').style.display = 'none';
+        document.getElementById('correct-answer').style.display = 'none';
+    }
+
+    async function checkAnswer() {
+        if (!currentQuestion) return;
+        
+        const answer = document.getElementById('answer-input').value.trim();
+        if (!answer) {
+            alert('Please write your answer first.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/technical/check', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    answer: answer,
+                    correct_answer: currentQuestion.answer,
+                    keywords: currentQuestion.keywords
+                })
+            });
+            const data = await response.json();
+            
+            document.getElementById('feedback-section').style.display = 'block';
+            const fill = document.getElementById('score-fill');
+            fill.style.width = data.score + '%';
+            fill.style.background = data.score >= 80 ? '#00c853' : data.score >= 60 ? '#ffc107' : '#ff1744';
+            document.getElementById('score-text').textContent = `Score: ${data.score}%`;
+            document.getElementById('feedback-text').textContent = data.feedback;
+            
+            if (!data.is_correct) {
+                document.getElementById('correct-answer').style.display = 'block';
+                document.getElementById('model-answer').textContent = currentQuestion.answer;
+            }
+        } catch (error) {
+            alert('Failed to check answer. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

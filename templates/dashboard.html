@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - PlacementPro{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1><i class="fas fa-rocket"></i> Welcome, {{ username }}!</h1>
+            <p>Your placement preparation dashboard. Track your progress and practice daily.</p>
+        </div>
+        <div class="progress-ring-container">
+            <div class="progress-ring">
+                <svg width="120" height="120">
+                    <circle class="progress-bg" cx="60" cy="60" r="50"/>
+                    <circle class="progress-fill" cx="60" cy="60" r="50" id="overall-progress"/>
+                </svg>
+                <div class="progress-text">
+                    <span id="progress-percent">0</span><small>%</small>
+                </div>
+            </div>
+            <p>Overall Progress</p>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="{{ url_for('technical') }}" class="action-card tech">
+                <i class="fas fa-code"></i>
+                <h3>Technical Practice</h3>
+                <p>Solve coding & theory questions</p>
+                <span class="action-btn">Start <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="{{ url_for('aptitude') }}" class="action-card aptitude">
+                <i class="fas fa-brain"></i>
+                <h3>Aptitude Test</h3>
+                <p>Take timed aptitude quizzes</p>
+                <span class="action-btn">Start <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="{{ url_for('mock_interview') }}" class="action-card interview">
+                <i class="fas fa-user-tie"></i>
+                <h3>Mock Interview</h3>
+                <p>Simulate real interview experience</p>
+                <span class="action-btn">Start <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="{{ url_for('roadmap') }}" class="action-card roadmap">
+                <i class="fas fa-map-signs"></i>
+                <h3>My Roadmap</h3>
+                <p>View personalized preparation plan</p>
+                <span class="action-btn">View <i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <h2><i class="fas fa-chart-bar"></i> Your Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-question-circle"></i>
+                <div class="stat-info">
+                    <h3 id="tech-done">0</h3>
+                    <p>Technical Questions</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-info">
+                    <h3 id="aptitude-score">0</h3>
+                    <p>Avg Aptitude Score</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-microphone"></i>
+                <div class="stat-info">
+                    <h3 id="mock-done">0</h3>
+                    <p>Mock Interviews</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <div class="stat-info">
+                    <h3 id="overall-grade">-</h3>
+                    <p>Overall Grade</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tips-section">
+        <h2><i class="fas fa-lightbulb"></i> Daily Tips</h2>
+        <div class="tips-carousel">
+            <div class="tip-card active">
+                <p>"Consistency beats intensity. Practice at least 30 minutes daily."</p>
+            </div>
+            <div class="tip-card">
+                <p>"Focus on understanding concepts, not memorizing answers."</p>
+            </div>
+            <div class="tip-card">
+                <p>"Explain your solutions out loud - it helps in interviews."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Animate progress ring
+    setTimeout(() => {
+        const progress = document.getElementById('progress-percent');
+        const circle = document.getElementById('overall-progress');
+        let percent = 0;
+        const target = 35;
+        const interval = setInterval(() => {
+            percent++;
+            progress.textContent = percent;
+            const circumference = 2 * Math.PI * 50;
+            const offset = circumference - (percent / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            if (percent >= target) clearInterval(interval);
+        }, 30);
+    }, 500);
+
+    // Load saved progress
+    async function loadProgress() {
+        try {
+            const response = await fetch('/api/progress/load');
+            const data = await response.json();
+            if (data.tech_done) document.getElementById('tech-done').textContent = data.tech_done;
+            if (data.aptitude_score) document.getElementById('aptitude-score').textContent = data.aptitude_score;
+            if (data.mock_done) document.getElementById('mock-done').textContent = data.mock_done;
+            if (data.overall_grade) document.getElementById('overall-grade').textContent = data.overall_grade;
+        } catch (e) {}
+    }
+    loadProgress();
+</script>
+{% endblock %}

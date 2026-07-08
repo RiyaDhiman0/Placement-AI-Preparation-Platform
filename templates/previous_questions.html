@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Previous Year Questions - PlacementPro{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-history"></i> Previous Year Placement Questions</h1>
+        <p>Practice questions asked by top companies in previous years</p>
+    </div>
+
+    <div class="filters-section">
+        <div class="filter-group">
+            <label for="company-filter">Company:</label>
+            <select id="company-filter">
+                <option value="all">All Companies</option>
+                <option value="Google">Google</option>
+                <option value="Microsoft">Microsoft</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Meta">Meta</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="year-filter">Year:</label>
+            <select id="year-filter">
+                <option value="all">All Years</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+            </select>
+        </div>
+        <button onclick="filterQuestions()" class="btn-primary">
+            <i class="fas fa-filter"></i> Apply Filters
+        </button>
+    </div>
+
+    <div class="questions-list" id="questions-list">
+        {% for q in questions %}
+        <div class="question-item">
+            <div class="question-item-header">
+                <span class="company-badge {{ q.company.lower() }}">{{ q.company }}</span>
+                <span class="year-badge">{{ q.year }}</span>
+                <span class="difficulty-badge {{ q.difficulty.lower() }}">{{ q.difficulty }}</span>
+                <span class="topic-tag">{{ q.topic }}</span>
+            </div>
+            <h3>{{ q.question }}</h3>
+            <div class="question-item-body">
+                <p><strong>Hint:</strong> {{ q.answer_hint }}</p>
+                <span class="category-tag">{{ q.category }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    async function filterQuestions() {
+        const company = document.getElementById('company-filter').value;
+        const year = document.getElementById('year-filter').value;
+        
+        try {
+            const response = await fetch(`/api/previous-questions/filter?company=${company}&year=${year}`);
+            const data = await response.json();
+            
+            const list = document.getElementById('questions-list');
+            if (data.questions.length === 0) {
+                list.innerHTML = '<p class="no-results">No questions found matching your criteria.</p>';
+                return;
+            }
+            
+            list.innerHTML = data.questions.map(q => `
+                <div class="question-item">
+                    <div class="question-item-header">
+                        <span class="company-badge ${q.company.toLowerCase()}">${q.company}</span>
+                        <span class="year-badge">${q.year}</span>
+                        <span class="difficulty-badge ${q.difficulty.toLowerCase()}">${q.difficulty}</span>
+                        <span class="topic-tag">${q.topic}</span>
+                    </div>
+                    <h3>${q.question}</h3>
+                    <div class="question-item-body">
+                        <p><strong>Hint:</strong> ${q.answer_hint}</p>
+                        <span class="category-tag">${q.category}</span>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            alert('Failed to filter questions. Please try again.');
+        }
+    }
+</script>
+{% endblock %}
